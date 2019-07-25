@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HammingHElib</class>
+ <widget class="QWidget" name="HammingHElib">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>898</width>
+    <height>796</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>海明距离测试——HElib BGV</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QStackedWidget,  QLabel,QPushButton, QRadioButton, QCheckBox, 
+QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog {
+    background-color: #222222;
+    color: #BBBBBB;
+    font-family: &quot;Segoe UI&quot;;
+}
+QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}
+
+QPushButton {
+    border: 1px solid #333333;
+    padding: 4px;
+    min-width: 65px;
+    min-height: 12px;
+}
+
+QPushButton:hover {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #111111;
+    border-color: #333333;
+    color: yellow;
+}
+
+QPushButton:disabled {
+    color: #333333;
+}
+
+QComboBox {
+    background-color: #AAA;
+    border: 1px solid #555;
+    color: black;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left: 1px solid #333333;
+}
+QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
+    border-color: #333333;
+    border: 1px solid #333333;
+
+}</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>60</y>
+     <width>321</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>海明距离测试——HElib BGV</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>390</y>
+     <width>89</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>开始测试</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>390</y>
+     <width>89</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+  </widget>
+  <widget class="QtCharts::QChartView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>450</y>
+     <width>371</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QtCharts::QChartView" name="graphicsView_2">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>440</y>
+     <width>341</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="result">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>130</y>
+     <width>331</width>
+     <height>241</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtCharts::QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">qchartview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

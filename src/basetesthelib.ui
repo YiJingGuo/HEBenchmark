@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BaseTestHElib</class>
+ <widget class="QWidget" name="BaseTestHElib">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>879</width>
+    <height>773</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>HElib的基本测试</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QStackedWidget, QLabel, QPushButton, QRadioButton, QCheckBox, 
+QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog {
+    background-color: #222222;
+    color: #BBBBBB;
+    font-family: &quot;Segoe UI&quot;;
+}</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>191</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>HElib的基本测试</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>110</y>
+     <width>81</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>选择参数</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>180</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>安全参数</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>190</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox {
+    background-color: #AAA;
+    border: 1px solid #555;
+    color: black;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left: 1px solid #333333;
+}</string>
+   </property>
+   <item>
+    <property name="text">
+     <string>80(默认)</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>240</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>测试类型</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>300</y>
+     <width>81</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>测试次数</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="TestType">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>250</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox {
+    background-color: #AAA;
+    border: 1px solid #555;
+    color: black;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left: 1px solid #333333;
+}</string>
+   </property>
+   <item>
+    <property name="text">
+     <string>Add测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Add Plain测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Mult测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Mult Plain测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Square测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Negation测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Sub测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Xor测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>nXor测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Rotate Random测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Encryption测试</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Decryption测试</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>310</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="start">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>510</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 1px solid #333333;
+    padding: 4px;
+    min-width: 65px;
+    min-height: 12px;
+}
+
+QPushButton:hover {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #111111;
+    border-color: #333333;
+    color: yellow;
+}
+
+QPushButton:disabled {
+    color: #333333;
+}</string>
+   </property>
+   <property name="text">
+    <string>开始测试</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="return_2">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>510</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    border: 1px solid #333333;
+    padding: 4px;
+    min-width: 65px;
+    min-height: 12px;
+}
+
+QPushButton:hover {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #111111;
+    border-color: #333333;
+    color: yellow;
+}
+
+QPushButton:disabled {
+    color: #333333;
+}</string>
+   </property>
+   <property name="text">
+    <string>返回</string>
+   </property>
+  </widget>
+  <widget class="QtCharts::QChartView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>460</y>
+     <width>471</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
+    border-color: #333333;
+    border: 1px solid #333333;
+
+}</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="result">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>160</y>
+     <width>471</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
+    border-color: #333333;
+    border: 1px solid #333333;
+
+}</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>370</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QStackedWidget, QLabel, QPushButton, QRadioButton, QCheckBox, 
+QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog, QTabBar {
+    font-family: &quot;Segoe UI&quot;;
+    background-color: #888;
+    color: #000;
+}</string>
+   </property>
+   <property name="text">
+    <string>是否开启密钥交换矩阵</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>110</y>
+     <width>81</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>测试结果</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>430</y>
+     <width>81</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>图像表示</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtCharts::QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">qchartview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

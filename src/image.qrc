@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/choose">
+        <file>image/蓝色.png</file>
+        <file>image/绿色.png</file>
+    </qresource>
+</RCC>
