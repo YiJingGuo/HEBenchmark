@@ -5,14 +5,14 @@ This test system takes HElib library and SEAL library as examples.
 
 ## Contents
 
-	* [Build](https://github.com/YiJingGuo#Build)
+* [Build](https://github.com/YiJingGuo#Build)
 
 - [About](https://github.com/YiJingGuo#About)
 - [Contributing](https://github.com/YiJingGuo#Contributing)
 
 ## Build
 
-	### Environment
+### Environment
 
 The version number of the HElib library is 1.0.0-beta0-Jan2019.
 
