@@ -5,10 +5,11 @@ This test system takes HElib library and SEAL library as examples.
 
 ## Contents
 
-* [Build](https://github.com/YiJingGuo#Build)
+* [Build](https://github.com/YiJingGuo/HEBenchmark#build)
 
-- [About](https://github.com/YiJingGuo#About)
-- [Contributing](https://github.com/YiJingGuo#Contributing)
+* [About](https://github.com/YiJingGuo/HEBenchmark#about)
+
+- [Contributing](https://github.com/YiJingGuo/HEBenchmark#contributing)
 
 ## Build
 
