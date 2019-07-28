@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>812</width>
+    <width>790</width>
     <height>788</height>
    </rect>
   </property>
@@ -14,14 +14,60 @@
    <string>HEBenchMark</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QStackedWidget, QLabel, QPushButton, QRadioButton, QCheckBox, 
+   <string notr="true">QStackedWidget,  QLabel,QPushButton, QRadioButton, QCheckBox, 
 QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog {
     background-color: #222222;
     color: #BBBBBB;
     font-family: &quot;Segoe UI&quot;;
+
 }
-QTabBar, QTabWidget {
-    background-color:#C2C7CB;
+QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}
+
+QPushButton {
+    border: 1px solid #666666;
+    padding: 4px;
+    min-width: 65px;
+    min-height: 12px;
+}
+
+QPushButton:hover {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #111111;
+    border-color: #333333;
+    color: yellow;
+}
+
+QPushButton:disabled {
+    color: #333333;
+}
+
+QComboBox {
+    background-color: #AAA;
+    border: 1px solid #555;
+    color: black;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    border-left: 1px solid #333333;
+}
+QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
+    border-color: #333333;
+    border: 1px solid #333333;
+
+}
+
+QPushButton{
+border-radius:5px;padding:2px 4px;
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -30,17 +76,60 @@ QTabBar, QTabWidget {
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>811</width>
+      <width>791</width>
       <height>771</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>使用介绍</string>
      </attribute>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>60</y>
+        <width>681</width>
+        <height>591</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>13</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>基本测试：
+1.SEAL BFV
+每个必要参数设置了候选项，您可以选择你需要的参数、测试类型，修改测试次数。
+此测试，可以显示生成环境的每一步时间，做密文计算的平均值，噪音消耗的折线图。
+2.SEAL CKKS
+由于CKKS不提供噪音预算功能，所以显示不了噪音消耗的折线图。
+增加密文计算和明文计算的对比图。
+3.HElib BGV
+为了简洁，只提供一个安全参数的候选卡，其余参数使用默认值。
+此测试，可以显示生成环境的每一步时间，做密文计算的平均值，噪音消耗的折线图。
+
+高级测试：
+在基本测试的基础上，增加了以下功能：
+1.SEAL BFV
+显示运算前后的明文，是否批处理选项，密文和明文时间的对比图。
+2.SEAL CKKS
+显示运算前后的明文，是否批处理选项。
+3.HElib BGV
+显示运算前后的明文，是否批处理选项，密文和明文时间的对比图。
+是否测试电路深度，勾选此选项卡，将会对同一密文做多次相同运算。
+4.实际应用
+测试海明距离与逻辑斯蒂回归在全同态加密库中的实际效率。</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -49,24 +138,31 @@ QTabBar, QTabWidget {
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>70</x>
         <y>160</y>
-        <width>91</width>
-        <height>31</height>
+        <width>240</width>
+        <height>70</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>75</width>
+        <height>18</height>
+       </size>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-    border: 1px solid #333333;
+    border: 1px solid #666666;
     padding: 4px;
     min-width: 65px;
     min-height: 12px;
+border-radius:5px;padding:2px 4px;
 }
 
 QPushButton:hover {
@@ -93,19 +189,25 @@ QPushButton:disabled {
        <rect>
         <x>470</x>
         <y>160</y>
-        <width>111</width>
-        <height>31</height>
+        <width>240</width>
+        <height>70</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>75</width>
+        <height>22</height>
+       </size>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-    border: 1px solid #333333;
+    border: 1px solid #666666;
     padding: 4px;
     min-width: 65px;
     min-height: 12px;
@@ -133,21 +235,27 @@ QPushButton:disabled {
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>400</y>
-        <width>91</width>
-        <height>31</height>
+        <x>260</x>
+        <y>490</y>
+        <width>240</width>
+        <height>70</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>75</width>
+        <height>22</height>
+       </size>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true">QPushButton {
-    border: 1px solid #333333;
+    border: 1px solid #666666;
     padding: 4px;
     min-width: 65px;
     min-height: 12px;
@@ -175,44 +283,83 @@ QPushButton:disabled {
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>40</y>
-        <width>201</width>
+        <x>260</x>
+        <y>30</y>
+        <width>231</width>
         <height>71</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Seal库的基本测试</string>
+       <string>SEAL库的基本测试</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>270</y>
-        <width>211</width>
+        <x>250</x>
+        <y>350</y>
+        <width>231</width>
         <height>81</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
        <string>HElib库的基本测试</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>460</y>
+        <width>701</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{border:2px solid rgb(192,192,192);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>130</y>
+        <width>701</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{border:2px solid rgb(192,192,192);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <zorder>label_8</zorder>
+     <zorder>label_6</zorder>
+     <zorder>pushButton</zorder>
+     <zorder>pushButton_2</zorder>
+     <zorder>pushButton_3</zorder>
+     <zorder>label</zorder>
+     <zorder>label_2</zorder>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -221,16 +368,16 @@ QPushButton:disabled {
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>70</x>
         <y>160</y>
-        <width>91</width>
-        <height>31</height>
+        <width>240</width>
+        <height>70</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -265,14 +412,14 @@ QPushButton:disabled {
        <rect>
         <x>470</x>
         <y>160</y>
-        <width>111</width>
-        <height>31</height>
+        <width>240</width>
+        <height>70</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -305,16 +452,16 @@ QPushButton:disabled {
      <widget class="QPushButton" name="pushButton_6">
       <property name="geometry">
        <rect>
-        <x>120</x>
-        <y>400</y>
-        <width>91</width>
-        <height>31</height>
+        <x>250</x>
+        <y>380</y>
+        <width>240</width>
+        <height>70</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -347,16 +494,16 @@ QPushButton:disabled {
      <widget class="QPushButton" name="pushButton_9">
       <property name="geometry">
        <rect>
-        <x>120</x>
+        <x>70</x>
         <y>580</y>
-        <width>131</width>
-        <height>31</height>
+        <width>171</width>
+        <height>70</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -389,16 +536,16 @@ QPushButton:disabled {
      <widget class="QPushButton" name="pushButton_10">
       <property name="geometry">
        <rect>
-        <x>480</x>
+        <x>540</x>
         <y>580</y>
-        <width>131</width>
-        <height>31</height>
+        <width>171</width>
+        <height>70</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>14</pointsize>
+        <pointsize>15</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -431,38 +578,38 @@ QPushButton:disabled {
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>40</y>
-        <width>201</width>
+        <x>260</x>
+        <y>30</y>
+        <width>231</width>
         <height>71</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Seal库的高级测试</string>
+       <string>SEAL库的高级测试</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>270</x>
         <y>270</y>
-        <width>211</width>
+        <width>241</width>
         <height>81</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
@@ -472,22 +619,124 @@ QPushButton:disabled {
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>480</y>
-        <width>101</width>
+        <x>330</x>
+        <y>490</y>
+        <width>111</width>
         <height>51</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
-        <pointsize>18</pointsize>
+        <pointsize>20</pointsize>
        </font>
       </property>
       <property name="text">
        <string>实际应用</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>130</y>
+        <width>701</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{border:2px solid rgb(192,192,192);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>350</y>
+        <width>701</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{border:2px solid rgb(192,192,192);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>550</y>
+        <width>701</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{border:2px solid rgb(192,192,192);}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_11">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>580</y>
+        <width>161</width>
+        <height>70</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    border: 1px solid #333333;
+    padding: 4px;
+    min-width: 65px;
+    min-height: 12px;
+}
+
+QPushButton:hover {
+    background-color: #333333;
+    border-color: #444444;
+}
+
+QPushButton:pressed {
+    background-color: #111111;
+    border-color: #333333;
+    color: yellow;
+}
+
+QPushButton:disabled {
+    color: #333333;
+}</string>
+      </property>
+      <property name="text">
+       <string>逻辑斯特回归</string>
+      </property>
+     </widget>
+     <zorder>label_11</zorder>
+     <zorder>label_10</zorder>
+     <zorder>label_9</zorder>
+     <zorder>pushButton_4</zorder>
+     <zorder>pushButton_5</zorder>
+     <zorder>pushButton_6</zorder>
+     <zorder>pushButton_9</zorder>
+     <zorder>pushButton_10</zorder>
+     <zorder>label_3</zorder>
+     <zorder>label_4</zorder>
+     <zorder>label_5</zorder>
+     <zorder>pushButton_11</zorder>
     </widget>
    </widget>
   </widget>

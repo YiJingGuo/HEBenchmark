@@ -70,7 +70,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
     <rect>
      <x>50</x>
      <y>50</y>
-     <width>251</width>
+     <width>261</width>
      <height>61</height>
     </rect>
    </property>
