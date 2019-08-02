@@ -17,7 +17,6 @@ BaseTestHElib::~BaseTestHElib()
     delete ui;
 }
 
-
 void BaseTestHElib::charts()
 {
     QLineSeries *series = new QLineSeries();
@@ -38,7 +37,7 @@ void BaseTestHElib::charts()
     series->attachAxis(axisX);//连接数据集与坐标轴。
     series->attachAxis(axisY);
 
-    chart->setTitle("噪音消耗量");
+    chart->setTitle("噪音剩余空间");
 
     ui->graphicsView->setChart(chart);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);

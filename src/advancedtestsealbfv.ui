@@ -800,7 +800,7 @@ QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog, QTabBar {
 }</string>
    </property>
    <property name="text">
-    <string>2</string>
+    <string>20</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_12">

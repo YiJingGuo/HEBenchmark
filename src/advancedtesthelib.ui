@@ -904,25 +904,6 @@ QPushButton:disabled {
     <string>是否开启密钥交换矩阵</string>
    </property>
   </widget>
-  <widget class="QLabel" name="testing">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>110</y>
-     <width>161</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>15</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>测试中，请稍等...</string>
-   </property>
-  </widget>
  </widget>
  <customwidgets>
   <customwidget>

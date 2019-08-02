@@ -31,7 +31,7 @@ public:
     int test_number = 10;
     int noise_budget_initial = 80;
     int noise_budget_end = 78;
-    int plain_size_max = 2;
+    int plain_size_max = 20;
     bool YesOrNoBatch = false;
 
     QString test_type = "Add测试";

@@ -722,7 +722,7 @@ QPushButton:disabled {
 }</string>
       </property>
       <property name="text">
-       <string>逻辑斯特回归</string>
+       <string>逻辑斯蒂回归</string>
       </property>
      </widget>
      <zorder>label_11</zorder>

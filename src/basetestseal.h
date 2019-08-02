@@ -25,11 +25,13 @@ public:
     int coeff_modulus = 4096;
     int security_parameters = 128;
     int dbc = 30;
-    int test_number = 10;
+    int test_number = 200;
     QString test_type = "Add测试";
     void charts_contrast();
     std::vector<chrono::microseconds> cipher_time;
     std::vector<chrono::microseconds> plain_time;
+    std::vector<chrono::microseconds> run_time;
+    void charts_time();
 
 
 private slots:
@@ -37,6 +39,7 @@ private slots:
     void BaseCkks128(int poly_modulus_degree, int coeff_modulus, int dbc);
     void BaseCkks192(int poly_modulus_degree, int coeff_modulus, int dbc);
     void BaseCkks256(int poly_modulus_degree, int coeff_modulus, int dbc);
+
 
     void on_pushButton_clicked();
 

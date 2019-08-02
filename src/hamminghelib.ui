@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>898</width>
-    <height>796</height>
+    <width>941</width>
+    <height>767</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -87,8 +87,8 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>390</y>
+     <x>690</x>
+     <y>240</y>
      <width>89</width>
      <height>31</height>
     </rect>
@@ -106,8 +106,8 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>390</y>
+     <x>690</x>
+     <y>290</y>
      <width>89</width>
      <height>31</height>
     </rect>
@@ -125,31 +125,333 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
   <widget class="QtCharts::QChartView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>450</y>
-     <width>371</width>
-     <height>251</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QtCharts::QChartView" name="graphicsView_2">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>440</y>
-     <width>341</width>
-     <height>251</height>
+     <x>450</x>
+     <y>390</y>
+     <width>441</width>
+     <height>331</height>
     </rect>
    </property>
   </widget>
   <widget class="QTextEdit" name="result">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>130</y>
-     <width>331</width>
-     <height>241</height>
+     <x>40</x>
+     <y>390</y>
+     <width>401</width>
+     <height>331</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="SetR">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>240</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1（默认）</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="pri">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>240</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>149（默认）</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>230</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>m =</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>290</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>c =</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>290</y>
+     <width>51</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>bits =</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>230</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>r =</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>290</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>测试次数</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="SetBits">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>300</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>300（默认）</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>150</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>设置参数</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="test_number">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>300</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>230</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>p =</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="SetM">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>240</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>13751（默认）</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="SetC">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>300</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>2（默认）</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>350</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>测试结果</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>340</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+   </property>
+   <property name="text">
+    <string>图像表示</string>
    </property>
   </widget>
  </widget>

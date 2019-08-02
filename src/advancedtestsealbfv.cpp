@@ -308,7 +308,6 @@ void AdvancedTestSealBFV::test_add(shared_ptr<SEALContext> context)
         pod_vector.push_back(rd() % plain_size_max);
     }
 
-
     if(YesOrNoBatch){
         freopen("plain_begin.txt","w",stdout);
         cout<<pod_vector<<endl;
@@ -318,7 +317,6 @@ void AdvancedTestSealBFV::test_add(shared_ptr<SEALContext> context)
         cout<<pod_vector[0]<<endl;
         ShowTxtToWindowPlain();
     }
-
 
     Plaintext plain_matrix;
     batch_encoder.encode(pod_vector,plain_matrix);
@@ -430,7 +428,6 @@ void AdvancedTestSealBFV::test_add(shared_ptr<SEALContext> context)
     ui->result->setText(result);
     charts();
     charts_contrast();
-
 }
 
 void AdvancedTestSealBFV::test_add_plain(shared_ptr<SEALContext> context)
@@ -513,31 +510,67 @@ void AdvancedTestSealBFV::test_add_plain(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
 
-    result += "\n";
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
 
-    Plaintext plain(curr_parms.poly_modulus_degree(), 0);
-    batch_encoder.encode(pod_vector, plain);
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    plain_size = pod_vector.size ();
+
+    result += "\n";
     for (int i = 0; i < test_number; i++)
     {
         /*
         [Add Plain]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        if(YesOrNoBatch){
+            encryptor.encrypt(plain_matrix,encrypted1);
+        }else{
+            encryptor.encrypt(encoder.encode(pod_vector.front()), encrypted1);
+        }
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
         time_start = chrono::high_resolution_clock::now();
-        evaluator.add_plain_inplace(encrypted1, plain);
+        evaluator.add_plain_inplace(encrypted1, plain_matrix);
         time_end = chrono::high_resolution_clock::now();
         time_add_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
         cipher_time.push_back(chrono::duration_cast<
                               chrono::microseconds>(time_end - time_start));
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
+
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
 
         stringstream ss;
         encrypted1.save (ss);
@@ -617,7 +650,6 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
 
     print_parameters(context);
     auto &curr_parms = context->context_data()->parms();
-    auto &plain_modulus = curr_parms.plain_modulus();
 
     /*
     Set up keys.
@@ -676,10 +708,10 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
     IntegerEncoder encoder(context);
 
     chrono::microseconds time_mult_sum(0);
-    chrono::microseconds time_mult_plain_sum(0); //1
+    chrono::microseconds time_mult_plain_sum(0);
 
-    long cipher_size = 0;//1
-    long plain_size = 0;//1
+    long cipher_size = 0;
+    long plain_size = 0;
     /*
     Populate a vector of values to batch.
     */
@@ -687,8 +719,52 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    vector<uint64_t> pod_vector2;
+    for (size_t i = 0; i < batch_encoder.slot_count(); i++)
+    {
+        pod_vector2.push_back(rd() % plain_size_max);
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"*"<<endl;
+        cout<<pod_vector2<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"*"<<endl;
+        cout<<pod_vector2[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    Plaintext plain_matrix2;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector2,plain_matrix2);
+    }else {
+        encoder.encode(pod_vector2[0],plain_matrix2);
+    }
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -698,9 +774,9 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
         [Multiply]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix,encrypted1);
         Ciphertext encrypted2(context);
-        encryptor.encrypt(encoder.encode(i + 1), encrypted2);
+        encryptor.encrypt(plain_matrix2,encrypted2);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -709,10 +785,25 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
         time_end = chrono::high_resolution_clock::now();
         time_mult_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
-        cipher_time.push_back(chrono::duration_cast<             //1
+        cipher_time.push_back(chrono::duration_cast<
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
+
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
 
         stringstream ss;
         encrypted1.save (ss);
@@ -754,12 +845,11 @@ void AdvancedTestSealBFV::test_mult(shared_ptr<SEALContext> context)
 
     auto ratio  = avg_mult/(double)avg_mult_plain;
 
-
     result += "Average multiply: ";
     result += QString::number(avg_mult);
     result += " microseconds\n";
 
-    result += "Average plain-text multiply time: ";  //1
+    result += "Average plain-text multiply time: ";
     result += QString::number(avg_mult_plain);
     result += " microseconds\n";
 
@@ -848,10 +938,10 @@ void AdvancedTestSealBFV::test_mult_plain(shared_ptr<SEALContext> context)
     IntegerEncoder encoder(context);
 
     chrono::microseconds time_mult_plain_sum(0);
-    chrono::microseconds time_mult_plain_plain_sum(0); //1
+    chrono::microseconds time_mult_plain_plain_sum(0);
 
-    long cipher_size = 0;//1
-    long plain_size = 0;//1
+    long cipher_size = 0;
+    long plain_size = 0;
 
     /*
     Populate a vector of values to batch.
@@ -860,13 +950,53 @@ void AdvancedTestSealBFV::test_mult_plain(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
 
-    result += "\n";
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
 
-    Plaintext plain(curr_parms.poly_modulus_degree(), 0);
-    batch_encoder.encode(pod_vector, plain);
+    vector<uint64_t> pod_vector2;
+    for (size_t i = 0; i < batch_encoder.slot_count(); i++)
+    {
+        pod_vector2.push_back(rd() % plain_size_max);
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"*"<<endl;
+        cout<<pod_vector2<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"*"<<endl;
+        cout<<pod_vector2[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    Plaintext plain_matrix2;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector2,plain_matrix2);
+    }else {
+        encoder.encode(pod_vector2[0],plain_matrix2);
+    }
+
+    plain_size = pod_vector.size ();
+    result += "\n";
 
     for (int i = 0; i < test_number; i++)
     {
@@ -874,21 +1004,36 @@ void AdvancedTestSealBFV::test_mult_plain(shared_ptr<SEALContext> context)
         [Multiply Plain]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix,encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
         time_start = chrono::high_resolution_clock::now();
-        evaluator.multiply_plain_inplace(encrypted1, plain);
+        evaluator.multiply_plain_inplace(encrypted1, plain_matrix2);
         time_end = chrono::high_resolution_clock::now();
         time_mult_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
-        cipher_time.push_back(chrono::duration_cast<             //1
+        cipher_time.push_back(chrono::duration_cast<
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
 
-        stringstream ss;         //1
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
+
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
+
+        stringstream ss;
         encrypted1.save (ss);
         cipher_size = ss.str ().length ();
 
@@ -914,13 +1059,11 @@ void AdvancedTestSealBFV::test_mult_plain(shared_ptr<SEALContext> context)
     }
 
     result += "Initial noise budget: ";
-    temp = QString::number(noise_budget_initial);
-    result += temp;
+    result += QString::number(noise_budget_initial);
     result += " bits\n";
 
     result += "The residual noise: ";
-    temp = QString::number(noise_budget_end);
-    result += temp;
+    result += QString::number(noise_budget_end);
     result += " bits\n";
 
     auto avg_mult_plain = time_mult_plain_sum.count() / test_number;
@@ -929,11 +1072,10 @@ void AdvancedTestSealBFV::test_mult_plain(shared_ptr<SEALContext> context)
     auto ratio  = avg_mult_plain/(double)avg_mult_plain_plain;
 
     result += "Average multiply plain: ";
-    temp = QString::number(avg_mult_plain);
-    result += temp;
+    result += QString::number(avg_mult_plain);
     result += " microseconds\n";
 
-    result += "Average plain-text multiply time: ";  //1
+    result += "Average plain-text multiply time: ";
     result += QString::number(avg_mult_plain_plain);
     result += " microseconds\n";
 
@@ -963,7 +1105,6 @@ void AdvancedTestSealBFV::test_sub(shared_ptr<SEALContext> context)
 
     print_parameters(context);
     auto &curr_parms = context->context_data()->parms();
-    auto &plain_modulus = curr_parms.plain_modulus();
 
     /*
     Set up keys.
@@ -1034,8 +1175,44 @@ void AdvancedTestSealBFV::test_sub(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    vector<uint64_t> pod_vector2;
+    for (size_t i = 0; i < batch_encoder.slot_count(); i++)
+    {
+        pod_vector2.push_back(rd() % plain_size_max);
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"-"<<endl;
+        cout<<pod_vector2<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"-"<<endl;
+        cout<<pod_vector2[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    batch_encoder.encode(pod_vector,plain_matrix);
+
+    Plaintext plain_matrix2;
+    batch_encoder.encode(pod_vector2,plain_matrix2);
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -1046,9 +1223,18 @@ void AdvancedTestSealBFV::test_sub(shared_ptr<SEALContext> context)
         [Sub]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        if(YesOrNoBatch){
+            encryptor.encrypt(plain_matrix,encrypted1);
+        }else{
+            encryptor.encrypt(encoder.encode(pod_vector.front()), encrypted1);
+        }
+
         Ciphertext encrypted2(context);
-        encryptor.encrypt(encoder.encode(i+1), encrypted2);
+        if(YesOrNoBatch){
+            encryptor.encrypt(plain_matrix2,encrypted2);
+        }else{
+            encryptor.encrypt(encoder.encode(pod_vector2.front()), encrypted2);
+        }
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -1061,6 +1247,21 @@ void AdvancedTestSealBFV::test_sub(shared_ptr<SEALContext> context)
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
+
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
 
         stringstream ss;
         encrypted1.save (ss);
@@ -1202,7 +1403,48 @@ void AdvancedTestSealBFV::test_sub_plain(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
+    }
+
+    vector<uint64_t> pod_vector2;
+    for (size_t i = 0; i < batch_encoder.slot_count(); i++)
+    {
+        pod_vector2.push_back(rd() % plain_size_max);
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"-"<<endl;
+        cout<<pod_vector2<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","a",stdout);
+        cout<<"-"<<endl;
+        cout<<pod_vector2[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+    Plaintext plain_matrix2;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector2,plain_matrix2);
+    }else {
+        encoder.encode(pod_vector2[0],plain_matrix2);
     }
 
     result += "\n";
@@ -1215,14 +1457,12 @@ void AdvancedTestSealBFV::test_sub_plain(shared_ptr<SEALContext> context)
         [Sub Plain]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
-        Ciphertext encrypted2(context);
-        encryptor.encrypt(encoder.encode(i + 1), encrypted2);
+        encryptor.encrypt(plain_matrix,encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
         time_start = chrono::high_resolution_clock::now();
-        evaluator.sub_plain_inplace(encrypted1, plain);
+        evaluator.sub_plain_inplace(encrypted1, plain_matrix2);
         time_end = chrono::high_resolution_clock::now();
         time_sub_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
@@ -1230,6 +1470,21 @@ void AdvancedTestSealBFV::test_sub_plain(shared_ptr<SEALContext> context)
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
+
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
 
         stringstream ss;
         encrypted1.save (ss);
@@ -1366,7 +1621,24 @@ void AdvancedTestSealBFV::test_square(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
+    }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
     }
 
     result += "\n";
@@ -1377,7 +1649,7 @@ void AdvancedTestSealBFV::test_square(shared_ptr<SEALContext> context)
         [Square]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix,encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -1388,7 +1660,20 @@ void AdvancedTestSealBFV::test_square(shared_ptr<SEALContext> context)
             chrono::microseconds>(time_end - time_start);
         cipher_time.push_back(chrono::duration_cast<
                               chrono::microseconds>(time_end - time_start));
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
 
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
 
         stringstream ss;
@@ -1522,8 +1807,27 @@ void AdvancedTestSealBFV::test_negation(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -1533,7 +1837,7 @@ void AdvancedTestSealBFV::test_negation(shared_ptr<SEALContext> context)
         [Negation]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix, encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -1546,7 +1850,20 @@ void AdvancedTestSealBFV::test_negation(shared_ptr<SEALContext> context)
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
 
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
         stringstream ss;
         encrypted1.save (ss);
         cipher_size = ss.str ().length ();
@@ -1684,8 +2001,27 @@ void AdvancedTestSealBFV::test_rotate_rows_one_step(shared_ptr<SEALContext> cont
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -1695,7 +2031,7 @@ void AdvancedTestSealBFV::test_rotate_rows_one_step(shared_ptr<SEALContext> cont
         [Rotate Rows One Step]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix, encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -1707,7 +2043,20 @@ void AdvancedTestSealBFV::test_rotate_rows_one_step(shared_ptr<SEALContext> cont
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
 
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
         stringstream ss;
         encrypted1.save (ss);
         cipher_size = ss.str ().length ();
@@ -1839,8 +2188,27 @@ void AdvancedTestSealBFV::test_rotate_rows_random(shared_ptr<SEALContext> contex
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -1850,12 +2218,14 @@ void AdvancedTestSealBFV::test_rotate_rows_random(shared_ptr<SEALContext> contex
         [Rotate Rows Random]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix, encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
         size_t row_size = batch_encoder.slot_count() / 2;
         int random_rotation = static_cast<int>(rd() % row_size);
+        freopen("plain_end.txt","w",stdout);
+        cout <<"旋转" <<random_rotation <<"位"<< endl;
         time_start = chrono::high_resolution_clock::now();
         evaluator.rotate_rows_inplace(encrypted1, random_rotation, gal_keys);
         time_end = chrono::high_resolution_clock::now();
@@ -1865,7 +2235,20 @@ void AdvancedTestSealBFV::test_rotate_rows_random(shared_ptr<SEALContext> contex
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
 
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","a",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","a",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
         stringstream ss;
         encrypted1.save (ss);
         cipher_size = ss.str ().length ();
@@ -1879,8 +2262,8 @@ void AdvancedTestSealBFV::test_rotate_rows_random(shared_ptr<SEALContext> contex
         plain_size = vec1.size ();
         vector<double> temp;
         time_start = chrono::high_resolution_clock::now();
-        for (int i=0;i<random_rotation;++i)
-        rotate_copy(vec1.begin (),vec1.begin ()+1,vec1.end (),back_inserter (temp));
+
+        rotate_copy(vec1.begin (),vec1.begin ()+random_rotation,vec1.end (),back_inserter (temp));
         time_end = chrono::high_resolution_clock::now();
         time_rotate_rows_random_plain_sum +=chrono::duration_cast<
                 chrono::microseconds>(time_end - time_start) ;
@@ -2000,8 +2383,27 @@ void AdvancedTestSealBFV::test_rotate_columns(shared_ptr<SEALContext> context)
     random_device rd;
     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
     {
-        pod_vector.push_back(rd() % plain_modulus.value());
+        pod_vector.push_back(rd() % plain_size_max);
     }
+
+    if(YesOrNoBatch){
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector<<endl;
+        ShowTxtToWindowPlain();
+    }else{
+        freopen("plain_begin.txt","w",stdout);
+        cout<<pod_vector[0]<<endl;
+        ShowTxtToWindowPlain();
+    }
+
+    Plaintext plain_matrix;
+    if(YesOrNoBatch){
+        batch_encoder.encode(pod_vector,plain_matrix);
+    }else {
+        encoder.encode(pod_vector[0],plain_matrix);
+    }
+
+    plain_size = pod_vector.size ();
 
     result += "\n";
 
@@ -2011,7 +2413,7 @@ void AdvancedTestSealBFV::test_rotate_columns(shared_ptr<SEALContext> context)
         [Rotate Columns]
         */
         Ciphertext encrypted1(context);
-        encryptor.encrypt(encoder.encode(i), encrypted1);
+        encryptor.encrypt(plain_matrix, encrypted1);
 
         noise_budget_initial = decryptor.invariant_noise_budget(encrypted1);
 
@@ -2024,7 +2426,20 @@ void AdvancedTestSealBFV::test_rotate_columns(shared_ptr<SEALContext> context)
                               chrono::microseconds>(time_end - time_start));
 
         noise_budget_end = decryptor.invariant_noise_budget(encrypted1);
+        Plaintext plain_result;
+        decryptor.decrypt(encrypted1, plain_result);
 
+        if(YesOrNoBatch){
+            vector<uint64_t> pod_result;
+            batch_encoder.decode(plain_result, pod_result);
+            freopen("plain_end.txt","w",stdout);
+            cout << pod_result << endl;
+            ShowTxtToWindowPlainEnd();
+        }else{
+            freopen("plain_end.txt","w",stdout);
+            cout << encoder.decode_int32(plain_result)<< endl;
+            ShowTxtToWindowPlainEnd();
+        }
         stringstream ss;
         encrypted1.save (ss);
         cipher_size = ss.str ().length ();
@@ -2103,7 +2518,7 @@ void AdvancedTestSealBFV::charts()
     series->attachAxis(axisX);//连接数据集与坐标轴。
     series->attachAxis(axisY);
 
-    chart->setTitle("噪音消耗量");
+    chart->setTitle("噪音剩余空间");
     ui->graphicsView->setChart(chart);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 }
@@ -2133,6 +2548,9 @@ void AdvancedTestSealBFV::charts_contrast()
     auto Ymin = plain_time[0].count();
     if(plain_time.back().count() > (cipher_time.back().count())*1.2){
         Ymax = (plain_time.back().count())*1.2;
+    }
+
+    if(plain_time[0].count() > cipher_time[0].count()){
         Ymin = cipher_time[0].count();
     }
 
@@ -2149,7 +2567,7 @@ void AdvancedTestSealBFV::charts_contrast()
     chart->setAxisX(axisX,series2);
     chart->setAxisY(axisY,series2);
 
-    chart->setTitle("明文运算时间与密文运算时间对比");
+    chart->setTitle("密文运算时间与明文运算时间对比");
 
     ui->graphicsView_2->setChart(chart);
     ui->graphicsView_2->setRenderHint(QPainter::Antialiasing);
@@ -2224,7 +2642,6 @@ void AdvancedTestSealBFV::print_parameters(shared_ptr<SEALContext> context)
     result += temp;
     ui->param->setText(result);
 }
-
 
 void AdvancedTestSealBFV::on_radioButton_clicked(bool checked)
 {

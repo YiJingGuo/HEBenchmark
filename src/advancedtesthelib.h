@@ -54,6 +54,8 @@ public:
     std::vector<chrono::microseconds> cipher_time;
     std::vector<chrono::microseconds> plain_time;
     void test_add();
+    void test_mul();
+
 
 
 private slots:

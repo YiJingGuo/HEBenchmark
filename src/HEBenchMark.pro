@@ -25,12 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 CONFIG += thread
 SOURCES += \
+    Database.cpp \
+    HELR.cpp \
+    LRtest.cpp \
     advancedtesthelib.cpp \
     advancedtestsealbfv.cpp \
     basetesthelib.cpp \
     generatorthread.cpp \
     hammingckks.cpp \
     hamminghelib.cpp \
+    logisticregression.cpp \
         main.cpp \
         mainwindow.cpp \
     basetestseal.cpp \
@@ -39,12 +43,16 @@ SOURCES += \
     unitex.cpp
 
 HEADERS += \
+    Database.h \
+    HELR.h \
+    LRtest.h \
     advancedtesthelib.h \
     advancedtestsealbfv.h \
     basetesthelib.h \
     generatorthread.h \
     hammingckks.h \
     hamminghelib.h \
+    logisticregression.h \
         mainwindow.h \
     basetestseal.h \
     basetestsealbfv.h \
@@ -57,12 +65,14 @@ FORMS += \
     basetesthelib.ui \
     hammingckks.ui \
     hamminghelib.ui \
+    logisticregression.ui \
         mainwindow.ui \
     basetestseal.ui \
     basetestsealbfv.ui \
     parametergenerator.ui
 LIBS += -lseal
 LIBS += -lhelib -lntl -lgmp -lm
+LIBS += -lHEAAN -lHELR -lntl -lgmp -lm
 LIBS += -lpthread
 LIBS += -pthread
 

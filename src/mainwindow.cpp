@@ -3,6 +3,7 @@
 #include "hamminghelib.h"
 #include "advancedtestsealbfv.h"
 #include "advancedtesthelib.h"
+#include "logisticregression.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -62,6 +63,13 @@ void MainWindow::on_pushButton_4_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
     AdvancedTestHElib *win = new AdvancedTestHElib;
+    win->show();
+    this->hide();
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    LogisticRegression *win = new LogisticRegression;
     win->show();
     this->hide();
 }

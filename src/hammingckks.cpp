@@ -165,6 +165,7 @@ void HammingCkks::HammingCkks256(int poly_modulus_degree, int coeff_modulus, int
     chrono::microseconds time_mod_switch_sum(0);
     chrono::microseconds time_plain_sum(0);
 
+
     long cipher_size = 0;
     long plain_size = 0;
 
@@ -188,7 +189,7 @@ void HammingCkks::HammingCkks256(int poly_modulus_degree, int coeff_modulus, int
     vector<double> result_vector(ckks_encoder.slot_count());
     for (int i = 0; i < test_number; i++)
     {
-       chrono::microseconds time_hamming_sum(0);
+        chrono::microseconds time_hamming_sum(0);
        /*
        [Encoding]
        */
@@ -1250,7 +1251,7 @@ void HammingCkks::charts()
     chart->setAxisX(axisX,series2);
     chart->setAxisY(axisY,series2);
 
-    chart->setTitle("明文运算时间与密文运算时间对比");
+    chart->setTitle("密文运算时间与明文运算时间对比");
 
     ui->graphicsView->setChart(chart);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);

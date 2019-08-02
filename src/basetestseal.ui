@@ -82,7 +82,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
      </font>
     </property>
     <property name="text">
-     <string>Seal_ckks的基本测试</string>
+     <string>Seal ckks的基本测试</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -482,7 +482,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
      </rect>
     </property>
     <property name="text">
-     <string>10</string>
+     <string>200</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="param">
@@ -491,7 +491,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
       <x>350</x>
       <y>200</y>
       <width>351</width>
-      <height>171</height>
+      <height>131</height>
      </rect>
     </property>
    </widget>
@@ -499,9 +499,9 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>370</y>
+      <y>330</y>
       <width>351</width>
-      <height>251</height>
+      <height>291</height>
      </rect>
     </property>
    </widget>
@@ -544,7 +544,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>390</x>
       <y>810</y>
       <width>16</width>
       <height>17</height>
@@ -560,7 +560,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>260</x>
       <y>810</y>
       <width>16</width>
       <height>17</height>
@@ -576,7 +576,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>420</x>
       <y>810</y>
       <width>61</width>
       <height>17</height>
@@ -596,7 +596,7 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>290</x>
       <y>810</y>
       <width>61</width>
       <height>17</height>
@@ -611,6 +611,42 @@ QAbstractScrollArea, QLineEdit, QTextEdit, QAbstractSpinBox, QComboBox {
     </property>
     <property name="text">
      <string>密文时间</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>810</y>
+      <width>16</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/choose/image/蓝色.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>810</y>
+      <width>61</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    border: none;
+    padding: 0;
+    background: none;
+}</string>
+    </property>
+    <property name="text">
+     <string>运行时间</string>
     </property>
    </widget>
   </widget>

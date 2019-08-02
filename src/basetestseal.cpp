@@ -11,6 +11,8 @@ BaseTestSeal::BaseTestSeal(QWidget *parent) :
     QPalette bgpal = palette();
     bgpal.setColor (QPalette::Background, QColor (0, 0 , 0, 255));
     bgpal.setColor (QPalette::Foreground, QColor (255,255,255,255)); setPalette (bgpal);
+    ui->label_20->hide();
+    ui->label_21->hide();
 }
 
 BaseTestSeal::~BaseTestSeal()
@@ -40,10 +42,10 @@ void BaseTestSeal::charts_contrast()
     sort(cipher_time.begin(), cipher_time.end());
     sort(plain_time.begin(),plain_time.end());
 
-    auto Ymax = (cipher_time.back().count())*1.2;
+    auto Ymax = (cipher_time.back().count())*1.1;
     auto Ymin = plain_time[0].count();
-    if(plain_time.back().count() > (cipher_time.back().count())*1.2){
-        Ymax = (plain_time.back().count())*1.2;
+    if(plain_time.back().count() > (cipher_time.back().count())*1.1){
+        Ymax = (plain_time.back().count())*1.1;
         Ymin = cipher_time[0].count();
     }
 
@@ -60,7 +62,7 @@ void BaseTestSeal::charts_contrast()
     chart->setAxisX(axisX,series2);
     chart->setAxisY(axisY,series2);
 
-    chart->setTitle("明文运算时间与密文运算时间对比");
+    chart->setTitle("密文运算时间与明文运算时间对比");
 
     ui->graphicsView->setChart(chart);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
@@ -135,9 +137,15 @@ void BaseTestSeal::print_parameters(shared_ptr<SEALContext> context)
     ui->param->setText(result);
 }
 
-
 void BaseTestSeal::test_add(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
+
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -298,6 +306,13 @@ void BaseTestSeal::test_add(shared_ptr<SEALContext> context, int dbc)
 
 void BaseTestSeal::test_add_plain(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
+
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -384,6 +399,7 @@ void BaseTestSeal::test_add_plain(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_add_plain_sum(0);
+    chrono::microseconds time_add_plain_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -421,20 +437,58 @@ void BaseTestSeal::test_add_plain(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_add_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(1);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), plus<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_add_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_add_plain = time_add_plain_sum.count() / test_number;
+    auto avg_add_plain_plain = time_add_plain_plain_sum.count() / test_number;
+
+    auto ratio  = avg_add_plain/(double)avg_add_plain_plain;
 
     result += "Average add plain: ";
-    temp = QString::number(avg_add_plain);
-    result += temp;
+    result += QString::number(avg_add_plain);
     result += " microseconds\n";
 
+    result += "Average plain-text addition time: ";
+    result += QString::number(avg_add_plain_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_mult(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -521,6 +575,7 @@ void BaseTestSeal::test_mult(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_multiply_sum(0);
+    chrono::microseconds time_multiply_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -561,20 +616,58 @@ void BaseTestSeal::test_mult(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_multiply_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(1);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), multiplies<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_multiply_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
-    auto avg_mult = time_multiply_sum.count() / test_number;
+    auto avg_multiply = time_multiply_sum.count() / test_number;
+    auto avg_multiply_plain = time_multiply_plain_sum.count() / test_number;
 
-    result += "Average mult: ";
-    temp = QString::number(avg_mult);
-    result += temp;
+    auto ratio  = avg_multiply/(double)avg_multiply_plain;
+
+    result += "Average multiply: ";
+    result += QString::number(avg_multiply);
     result += " microseconds\n";
 
+    result += "Average plain-text multiply time: ";
+    result += QString::number(avg_multiply_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_mult_plain(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -661,6 +754,7 @@ void BaseTestSeal::test_mult_plain(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_multiply_plain_sum(0);
+    chrono::microseconds time_multiply_plain_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -698,20 +792,58 @@ void BaseTestSeal::test_mult_plain(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_multiply_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(1);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), multiplies<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_multiply_plain_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_multiply_plain = time_multiply_plain_sum.count() / test_number;
+    auto avg_multiply_plain_plain = time_multiply_plain_plain_sum.count() / test_number;
+
+    auto ratio  = avg_multiply_plain/(double)avg_multiply_plain_plain;
 
     result += "Average multiply plain: ";
-    temp = QString::number(avg_multiply_plain);
-    result += temp;
+    result += QString::number(avg_multiply_plain);
     result += " microseconds\n";
 
+    result += "Average plain-text multiply time: ";
+    result += QString::number(avg_multiply_plain_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_sub(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -798,6 +930,7 @@ void BaseTestSeal::test_sub(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_sub_sum(0);
+    chrono::microseconds time_sub_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -839,20 +972,58 @@ void BaseTestSeal::test_sub(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_sub_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(1);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), minus<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_sub_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_sub = time_sub_sum.count() / test_number;
+    auto avg_sub_plain = time_sub_plain_sum.count() / test_number;
+
+    auto ratio  = avg_sub/(double)avg_sub_plain;
 
     result += "Average sub: ";
-    temp = QString::number(avg_sub);
-    result += temp;
+    result += QString::number(avg_sub);
     result += " microseconds\n";
 
+    result += "Average plain-text sub time: ";
+    result += QString::number(avg_sub_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_sub_plain(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -939,6 +1110,7 @@ void BaseTestSeal::test_sub_plain(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_sub_plain_sum(0);
+    chrono::microseconds time_sub_plain_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -976,20 +1148,58 @@ void BaseTestSeal::test_sub_plain(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_sub_plain_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(1);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), minus<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_sub_plain_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_sub_plain = time_sub_plain_sum.count() / test_number;
+    auto avg_sub_plain_plain = time_sub_plain_plain_sum.count() / test_number;
+
+    auto ratio  = avg_sub_plain/(double)avg_sub_plain_plain;
 
     result += "Average sub plain: ";
-    temp = QString::number(avg_sub_plain);
-    result += temp;
+    result += QString::number(avg_sub_plain);
     result += " microseconds\n";
 
+    result += "Average plain-text sub time: ";
+    result += QString::number(avg_sub_plain_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_square(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1076,6 +1286,7 @@ void BaseTestSeal::test_square(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_square_sum(0);
+    chrono::microseconds time_square_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -1113,20 +1324,58 @@ void BaseTestSeal::test_square(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_square_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(0);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec1.begin(),vec1.begin (), multiplies<double>());
+        time_end = chrono::high_resolution_clock::now();
+        time_square_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_square = time_square_sum.count() / test_number;
+    auto avg_square_plain = time_square_plain_sum.count() / test_number;
+
+    auto ratio  = avg_square/(double)avg_square_plain;
 
     result += "Average square: ";
-    temp = QString::number(avg_square);
-    result += temp;
+    result += QString::number(avg_square);
     result += " microseconds\n";
 
+    result += "Average plain-text square time: ";
+    result += QString::number(avg_square_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
+}
+
+auto op_negation(double i, double j)
+{
+    return -i;
 }
 
 void BaseTestSeal::test_negation(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1213,6 +1462,7 @@ void BaseTestSeal::test_negation(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_negation_sum(0);
+    chrono::microseconds time_negation_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -1250,20 +1500,58 @@ void BaseTestSeal::test_negation(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_negation_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(1);
+        }
+        vector<double> vec2;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec2.push_back(0.0);
+        }
+
+        time_start = chrono::high_resolution_clock::now();
+        transform(vec1.begin(), vec1.end(), vec2.begin(),vec1.begin (), op_negation);
+        time_end = chrono::high_resolution_clock::now();
+        time_negation_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_negation = time_negation_sum.count() / test_number;
+    auto avg_negation_plain = time_negation_plain_sum.count() / test_number;
+
+    auto ratio  = avg_negation/(double)avg_negation_plain;
 
     result += "Average negation: ";
-    temp = QString::number(avg_negation);
-    result += temp;
+    result += QString::number(avg_negation);
     result += " microseconds\n";
 
+    result += "Average plain-text negation time: ";
+    result += QString::number(avg_negation_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_rotate_vector(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1350,6 +1638,8 @@ void BaseTestSeal::test_rotate_vector(shared_ptr<SEALContext> context, int dbc)
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_rotate_vector_sum(0);
+    chrono::microseconds time_rotate_vector_plain_sum(0);
+
 
     double scale;
     if (coeff_modulus == 4096){
@@ -1387,20 +1677,54 @@ void BaseTestSeal::test_rotate_vector(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_rotate_vector_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(1);
+        }
+
+        vector<double> temp;
+        time_start = chrono::high_resolution_clock::now();
+        rotate_copy(vec1.begin (),vec1.begin ()+1,vec1.end (),back_inserter (temp));
+        time_end = chrono::high_resolution_clock::now();
+        time_rotate_vector_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_rotate_vector = time_rotate_vector_sum.count() / test_number;
+    auto avg_rotate_vector_plain = time_rotate_vector_plain_sum.count() / test_number;
+
+    auto ratio  = avg_rotate_vector/(double)avg_rotate_vector_plain;
 
     result += "Average rotate vector: ";
-    temp = QString::number(avg_rotate_vector);
-    result += temp;
+    result += QString::number(avg_rotate_vector);
     result += " microseconds\n";
 
+    result += "Average plain-text rotate vector time: ";
+    result += QString::number(avg_rotate_vector_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_rotate_vector_random(shared_ptr<SEALContext> context, int dbc)
 {
+    ui->label_16->show();
+    ui->label_17->show();
+    ui->label_18->show();
+    ui->label_19->show();
+    ui->label_20->hide();
+    ui->label_21->hide();
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1487,6 +1811,7 @@ void BaseTestSeal::test_rotate_vector_random(shared_ptr<SEALContext> context, in
     CKKSEncoder ckks_encoder(context);
 
     chrono::microseconds time_rotate_vector_random_sum(0);
+    chrono::microseconds time_rotate_vector_random_plain_sum(0);
 
     double scale;
     if (coeff_modulus == 4096){
@@ -1525,16 +1850,45 @@ void BaseTestSeal::test_rotate_vector_random(shared_ptr<SEALContext> context, in
         time_end = chrono::high_resolution_clock::now();
         time_rotate_vector_random_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        cipher_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
+        //计算明文运算时间
+        vector<double> vec1;
+        for (size_t i = 0; i < ckks_encoder.slot_count(); i++)
+        {
+            vec1.push_back(1);
+        }
+
+        vector<double> temp;
+        time_start = chrono::high_resolution_clock::now();
+
+        rotate_copy(vec1.begin (),vec1.begin ()+random_rotation,vec1.end (),back_inserter (temp));
+        time_end = chrono::high_resolution_clock::now();
+        time_rotate_vector_random_plain_sum +=chrono::duration_cast<
+                chrono::microseconds>(time_end - time_start) ;
+        plain_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_rotate_vector_random = time_rotate_vector_random_sum.count() / test_number;
+    auto avg_rotate_vector_random_plain = time_rotate_vector_random_plain_sum.count() / test_number;
+
+    auto ratio  = avg_rotate_vector_random/(double)avg_rotate_vector_random_plain;
 
     result += "Average rotate vector random: ";
-    temp = QString::number(avg_rotate_vector_random);
-    result += temp;
+    result += QString::number(avg_rotate_vector_random);
     result += " microseconds\n";
 
+    result += "Average plain-text rotate vector random time: ";
+    result += QString::number(avg_rotate_vector_random_plain);
+    result += " microseconds\n";
+
+    result += "密文运算与明文运算时间比: ";
+    result += QString::number(ratio);
+    result += "\n";
+
     ui->result->setText(result);
+    charts_contrast();
 }
 
 void BaseTestSeal::test_relinearize(shared_ptr<SEALContext> context, int dbc)
@@ -1662,8 +2016,9 @@ void BaseTestSeal::test_relinearize(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_relinearize_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
-
     auto avg_relinearize = time_relinearize_sum.count() / test_number;
 
     result += "Average relinearize: ";
@@ -1672,10 +2027,52 @@ void BaseTestSeal::test_relinearize(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
+}
+
+void BaseTestSeal::charts_time()
+{
+    //坐标点导入
+    QLineSeries *series = new QLineSeries();
+
+    for(int i = 0;i<test_number;i++)
+    *series << QPointF(i+1, run_time[i].count());
+
+    QChart *chart = new QChart();
+    chart->legend()->hide();
+    chart->addSeries(series);
+
+    sort(run_time.begin(), run_time.end());
+
+    auto Ymax = (run_time.back().count())*1.1;
+    auto Ymin = run_time[0].count();
+
+    QValueAxis *axisX = new QValueAxis();//轴变量、数据系列变量，都不能声明为局部临时变量
+    QValueAxis *axisY = new QValueAxis();//创建X/Y轴
+    axisX->setRange(1, test_number);
+    axisY->setRange(Ymin, Ymax);//设置X/Y显示的区间
+    chart->setAxisX(axisX);
+    chart->setAxisY(axisY);//设置chart的坐标轴
+    series->attachAxis(axisX);//连接数据集与坐标轴。
+    series->attachAxis(axisY);
+
+    chart->setTitle("运行时间");
+
+    ui->graphicsView->setChart(chart);
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+
+    run_time.clear();
 }
 
 void BaseTestSeal::test_rescale(shared_ptr<SEALContext> context, int dbc)
 {
+
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1799,6 +2196,8 @@ void BaseTestSeal::test_rescale(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_rescale_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_rescale = time_rescale_sum.count() / test_number;
@@ -1809,10 +2208,18 @@ void BaseTestSeal::test_rescale(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
 }
 
 void BaseTestSeal::test_encryption(shared_ptr<SEALContext> context, int dbc)
 {
+
     QString result = "";
 
     chrono::high_resolution_clock::time_point time_start, time_end;
@@ -1935,6 +2342,8 @@ void BaseTestSeal::test_encryption(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_encryption_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_encryption = time_encryption_sum.count() / test_number;
@@ -1945,6 +2354,13 @@ void BaseTestSeal::test_encryption(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
 }
 
 void BaseTestSeal::test_decryption(shared_ptr<SEALContext> context, int dbc)
@@ -2073,6 +2489,8 @@ void BaseTestSeal::test_decryption(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_decryption_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_decryption = time_decryption_sum.count() / test_number;
@@ -2083,6 +2501,13 @@ void BaseTestSeal::test_decryption(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
 }
 
 void BaseTestSeal::test_encoding(shared_ptr<SEALContext> context, int dbc)
@@ -2208,6 +2633,8 @@ void BaseTestSeal::test_encoding(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_encoding_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_encoding = time_encoding_sum.count() / test_number;
@@ -2218,6 +2645,13 @@ void BaseTestSeal::test_encoding(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
 }
 
 void BaseTestSeal::test_decoding(shared_ptr<SEALContext> context, int dbc)
@@ -2345,6 +2779,8 @@ void BaseTestSeal::test_decoding(shared_ptr<SEALContext> context, int dbc)
         time_end = chrono::high_resolution_clock::now();
         time_decode_sum += chrono::duration_cast<
             chrono::microseconds>(time_end - time_start);
+        run_time.push_back(chrono::duration_cast<
+                              chrono::microseconds>(time_end - time_start));
     }
 
     auto avg_decode = time_decode_sum.count() / test_number;
@@ -2355,6 +2791,13 @@ void BaseTestSeal::test_decoding(shared_ptr<SEALContext> context, int dbc)
     result += " microseconds\n";
 
     ui->result->setText(result);
+    ui->label_16->hide();
+    ui->label_17->hide();
+    ui->label_18->hide();
+    ui->label_19->hide();
+    ui->label_20->show();
+    ui->label_21->show();
+    charts_time();
 }
 
 void BaseTestSeal::BaseCkks128(int poly_modulus_degree, int coeff_modulus, int dbc)
